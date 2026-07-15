@@ -1,0 +1,1 @@
+Read SPEC.md first, then TASK.md. Implement tasks sequentially. Do not simplify architecture.

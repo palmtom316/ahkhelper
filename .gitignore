@@ -1,0 +1,38 @@
+# Logs
+logs/*.log
+logs/*.log.1
+!logs/.gitkeep
+
+# OS / editor
+Thumbs.db
+Desktop.ini
+.DS_Store
+*.swp
+*~
+.vscode/
+.idea/
+
+# Build outputs
+*.exe
+*.bin
+dist/*.zip
+dist/*.log
+dist/ScreenPlus.exe
+scripts/*.log
+
+# Local DLL (user-provided binary)
+VirtualDesktopAccessor.dll
+dist/VirtualDesktopAccessor.dll
+
+# Agent / local scratch
+.pi-subagents/
+.pi/
+.cursor/
+
+# Zone.Identifier (Windows alternate data stream leftovers)
+*:Zone.Identifier
+*Zone.Identifier
+
+# Secrets / local env
+.env
+.env.*
