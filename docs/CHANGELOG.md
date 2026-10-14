@@ -1,6 +1,27 @@
 # Changelog
 
-本项目遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/) 风格，版本号语义化。
+本项目遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.0.0/) 风格,版本号语义化。
+
+## [Unreleased]
+
+### Fixed
+
+- **build.ps1 成功码误判**:`if (-not $code)` 把退出码 0(成功)当作假值,回退成 -1,
+  导致已生成 exe 仍报 `[FAIL]`。改为仅在 `$null` 时回退到 `$LASTEXITCODE`。
+- **只读 Base 导致 Ahk2Exe 退出码 49**:Ahk2Exe 先复制 Base 再写资源,只读 Base 会使
+  `BeginUpdateResource` 失败。`build.ps1` 检测到只读 Base 时自动改用可写临时副本,
+  不再修改用户的 AutoHotkey 安装目录。
+- **Ahk2Exe 定位**:`-AhkDir` 缺少 `Compiler\Ahk2Exe.exe` 时,自动回退到用户级/常见安装目录
+  (`%LocalAppData%\Programs\AutoHotkey` 等)。
+- **错误提示**:Ahk2Exe 失败时按退出码给出可读提示(49/50/51/52/65)。
+- **`-Clean` 误删模板**:`-Clean` 会递归清空 `dist\`,而 `dist\portable.flag.example`
+  模板就在其中,导致 `-CopyRuntime` 报 `[SKIP]`。现在先读入模板,清空后写回。
+- **`-CopyRuntime` 路径**:模板源从硬编码 `dist\` 改为 `$Source\dist\`,并增加 src==dst
+  守卫,自定义 `-OutDir` 时不再错拷。
+
+### Docs
+
+- `INSTALL.md`:补充一键脚本用法、Ahk2Exe 安装受限网络的手动步骤、退出码 49 / -1 排查项。
 
 ## [1.2.0] - 2026-07-15
 

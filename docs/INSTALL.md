@@ -52,20 +52,31 @@ FallbackMode=off
 
 ## Ahk2Exe 编译
 
-1. 打开 Ahk2Exe，Source=`screen.ahk`，Base=Unicode 64-bit。  
+1. 打开 Ahk2Exe,Source=`screen.ahk`,Base=Unicode 64-bit。  
 2. 输出如 `ScreenPlus.exe`。  
-3. 与 exe 同目录放置：
+3. 与 exe 同目录放置:
 
 | 文件 | 说明 |
 |------|------|
-| `screen.ini` | 配置（可首次自动生成默认键） |
+| `screen.ini` | 配置(可首次自动生成默认键) |
 | `VirtualDesktopAccessor.dll` | 可选 |
 
-模块与插件经 `#Include` 编入主脚本，一般**不必**再拷 `modules\`。
+模块与插件经 `#Include` 编入主脚本,一般**不必**再拷 `modules\`。
 
 ```bat
 Ahk2Exe.exe /in screen.ahk /out ScreenPlus.exe /base "C:\Program Files\AutoHotkey\v2\AutoHotkey64.exe"
 ```
+
+### 一键脚本
+
+```bat
+scripts\build.cmd
+:: 或
+powershell -ExecutionPolicy Bypass -File scripts\build.ps1 -Clean -CopyRuntime
+```
+
+脚本会自动探测 AutoHotkey 安装目录(含用户级安装)、校验 x64、用 8.3 短路径
+规避 Ahk2Exe 的空格路径问题,并处理只读 Base。
 
 ## 验证清单（Windows）
 
@@ -98,7 +109,10 @@ Ahk2Exe.exe /in screen.ahk /out ScreenPlus.exe /base "C:\Program Files\AutoHotke
 
 | 现象 | 处理 |
 |------|------|
-| VD 降级 / 移窗提示 | 放置匹配架构的 DLL；看托盘「状态总览」 |
-| 划词不复制 | 检查鼠标下进程是否在白名单；增大 `DelayMs` |
+| VD 降级 / 移窗提示 | 放置匹配架构的 DLL;看托盘「状态总览」 |
+| 划词不复制 | 检查鼠标下进程是否在白名单;增大 `DelayMs` |
 | 假成功/假失败 | 检查目标窗口焦点、`WaitForAnyData` 与日志中的 sequence 信息 |
 | 启动失败 | 查看 `logs\fatal.log` 与当日 log |
+| Ahk2Exe 退出码 49 | Base 文件只读或目标 exe 正在运行;`build.ps1` 已自动改用可写临时副本 |
+| 装不上 Ahk2Exe | 官方安装器需访问 `api.github.com`,受限网络会失败。可手动下载 [Ahk2Exe release](https://github.com/AutoHotkey/Ahk2Exe/releases) 解压出 `Ahk2Exe.exe`,放到 `%LocalAppData%\Programs\AutoHotkey\Compiler\`,并从 `C:\Program Files\AutoHotkey\v2\` 复制 `AutoHotkey64.exe` 到同级 `v2\`,再用 `-AhkDir` 指向该目录 |
+| 编译报退出码 -1 但已生成 exe | 旧版脚本把成功码 0 误判为失败,更新到最新 `scripts/build.ps1` |
